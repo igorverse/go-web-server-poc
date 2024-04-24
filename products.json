@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "name": "Geladeira",
+    "color": "Cinza",
+    "price": 2799.98,
+    "stock": 42,
+    "code": "AB1",
+    "isPublished": true,
+    "createdAt": "2024-04-24"
+  },
+  {
+    "id": 1,
+    "name": "Mesa",
+    "color": "Linho",
+    "price": 2199.00,
+    "stock": 2,
+    "code": "SF3",
+    "isPublished": true,
+    "createdAt": "2024-04-24"
+  }
+]
