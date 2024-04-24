@@ -33,6 +33,7 @@ func main() {
 	products := router.Group("/products")
 	{
 		products.GET("/", GetAll)
+		products.GET("/:id", GetOne)
 	}
 
 	router.Run()
@@ -113,4 +114,33 @@ func GetAll(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"data": filteredProducts})
+}
+
+func GetOne(ctx *gin.Context) {
+	products := []Products{}
+
+	file, err := os.ReadFile("products.json")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	err = json.Unmarshal([]byte(file), &products)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	for _, p := range products {
+		if p.Id == id {
+			ctx.JSON(http.StatusOK, p)
+			return
+		}
+	}
+
+	ctx.JSON(http.StatusNotFound, gin.H{"message": "product not found"})
 }
