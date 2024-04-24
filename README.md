@@ -5,3 +5,4 @@
 - [x] Estruturar um JSON
 - [x] Olá {nome}
 - [x] Listar Entidade
+- [x] Filtrar endpoint

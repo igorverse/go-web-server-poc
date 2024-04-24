@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,13 +30,25 @@ func main() {
 		})
 	})
 
-	router.GET("/products", GetAll)
+	products := router.Group("/products")
+	{
+		products.GET("/", GetAll)
+	}
 
 	router.Run()
 }
 
 func GetAll(ctx *gin.Context) {
 	products := []Products{}
+
+	id := ctx.Query("id")
+	name := ctx.Query("name")
+	color := ctx.Query("color")
+	price := ctx.Query("price")
+	stock := ctx.Query("stock")
+	code := ctx.Query("code")
+	isPublished := ctx.Query("isPublished")
+	createdAt := ctx.Query("createdAt")
 
 	file, err := os.ReadFile("products.json")
 
@@ -50,7 +64,53 @@ func GetAll(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(products)
+	filteredProducts := []Products{}
 
-	ctx.JSON(200, products)
+	// TODO: it must be refactored to an elegant solution
+	for _, p := range products {
+		if id != "" {
+			convId, _ := strconv.Atoi(id)
+
+			if convId != p.Id {
+				continue
+			}
+		}
+		if name != "" && p.Name != name {
+			continue
+		}
+		if color != "" && p.Color != color {
+			continue
+		}
+		if price != "" {
+			convPrice, _ := strconv.ParseFloat(price, 64)
+
+			if convPrice != p.Price {
+				continue
+			}
+		}
+		if stock != "" {
+			convStock, _ := strconv.Atoi(stock)
+
+			if convStock != p.Stock {
+				continue
+			}
+		}
+		if code != "" && p.Code != code {
+			continue
+		}
+		if isPublished != "" {
+			convIsPublished, _ := strconv.ParseBool(isPublished)
+
+			if convIsPublished != p.IsPublished {
+				continue
+			}
+		}
+		if createdAt != "" && p.CreatedAt != createdAt {
+			continue
+		}
+
+		filteredProducts = append(filteredProducts, p)
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": filteredProducts})
 }
