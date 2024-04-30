@@ -33,7 +33,7 @@ func main() {
 	products := router.Group("/products")
 	{
 		products.GET("/", GetAll)
-		products.GET("/:id", GetOne)
+		products.GET("/:id", Get)
 	}
 
 	router.Run()
@@ -116,7 +116,7 @@ func GetAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": filteredProducts})
 }
 
-func GetOne(ctx *gin.Context) {
+func Get(ctx *gin.Context) {
 	products := []Products{}
 
 	file, err := os.ReadFile("products.json")

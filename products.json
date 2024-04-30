@@ -1,6 +1,6 @@
 [
   {
-    "id": 0,
+    "id": 1,
     "name": "Geladeira",
     "color": "Cinza",
     "price": 2799.98,
@@ -10,7 +10,7 @@
     "createdAt": "2024-04-24"
   },
   {
-    "id": 1,
+    "id": 2,
     "name": "Sofá",
     "color": "Linho",
     "price": 2199.00,
