@@ -83,7 +83,7 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 
 func (c *ProductHandler) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
+		token := ctx.GetHeader("token")
 		if token != "123456" {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
