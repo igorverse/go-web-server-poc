@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/igorverse/go-web-server-poc/internal/products"
@@ -24,6 +25,37 @@ type ProductHandler struct {
 func NewProduct(p products.Service) *ProductHandler {
 	return &ProductHandler{
 		service: p,
+	}
+}
+
+func (c *ProductHandler) Get() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token != "123456" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+
+		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		p, err := c.service.Get(id)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, p)
 	}
 }
 

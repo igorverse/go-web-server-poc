@@ -1,7 +1,7 @@
 package products
 
 type Product struct {
-	ID          uint    `json:"id"`
+	ID          uint64  `json:"id"`
 	Name        string  `json:"name"`
 	Color       string  `json:"color"`
 	Price       float64 `json:"price"`

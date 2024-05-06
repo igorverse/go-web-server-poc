@@ -5,9 +5,13 @@ import (
 )
 
 var ps []Product
-var lastID uint
+var lastID uint64
 
 type MemoryRespository struct{}
+
+func (m *MemoryRespository) Get(id uint64) (Product, error) {
+	return ps[id-1], nil
+}
 
 func (m *MemoryRespository) GetAll() ([]Product, error) {
 	return ps, nil
@@ -31,6 +35,6 @@ func (m *MemoryRespository) Store(name string, color string, price float64, stoc
 	return p, nil
 }
 
-func (m *MemoryRespository) lastID() (uint, error) {
+func (m *MemoryRespository) lastID() (uint64, error) {
 	return lastID, nil
 }

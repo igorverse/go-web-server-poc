@@ -15,5 +15,6 @@ func main() {
 	pr := server.Group("/products")
 	pr.POST("/", productHandler.Store())
 	pr.GET("/", productHandler.GetAll())
+	pr.GET("/:id", productHandler.Get())
 	server.Run()
 }
