@@ -69,7 +69,66 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 			return
 		}
 
-		p, err := c.service.GetAll()
+		ps, err := c.service.GetAll()
+		fmt.Println(ps)
+
+		id := ctx.Query("id")
+		name := ctx.Query("name")
+		color := ctx.Query("color")
+		price := ctx.Query("price")
+		stock := ctx.Query("stock")
+		code := ctx.Query("code")
+		isPublished := ctx.Query("isPublished")
+		createdAt := ctx.Query("createdAt")
+
+		var filteredProducts []products.Product
+
+		// TODO: it must be refactored to an elegant solution
+		for _, p := range ps {
+			if id != "" {
+				convId, _ := strconv.Atoi(id)
+
+				if convId != int(p.ID) {
+					continue
+				}
+			}
+			if name != "" && p.Name != name {
+				continue
+			}
+			if color != "" && p.Color != color {
+				continue
+			}
+			if price != "" {
+				convPrice, _ := strconv.ParseFloat(price, 64)
+
+				if convPrice != p.Price {
+					continue
+				}
+			}
+			if stock != "" {
+				convStock, _ := strconv.Atoi(stock)
+
+				if convStock != p.Stock {
+					continue
+				}
+			}
+			if code != "" && p.Code != code {
+				continue
+			}
+			if isPublished != "" {
+				convIsPublished, _ := strconv.ParseBool(isPublished)
+
+				if convIsPublished != p.IsPublished {
+					continue
+				}
+			}
+			if createdAt != "" && p.CreatedAt != createdAt {
+				continue
+			}
+
+			filteredProducts = append(filteredProducts, p)
+		}
+
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
@@ -77,7 +136,7 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusOK, p)
+		ctx.JSON(http.StatusOK, filteredProducts)
 	}
 }
 
