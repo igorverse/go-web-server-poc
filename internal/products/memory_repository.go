@@ -14,6 +14,7 @@ func (m *MemoryRespository) GetAll() ([]Product, error) {
 }
 
 func (m *MemoryRespository) Store(name string, color string, price float64, stock int, code string, isPublished bool) (Product, error) {
+	lastID++
 	p := Product{
 		ID:          lastID,
 		Name:        name,
@@ -26,7 +27,6 @@ func (m *MemoryRespository) Store(name string, color string, price float64, stoc
 	}
 
 	ps = append(ps, p)
-	lastID++
 
 	return p, nil
 }
