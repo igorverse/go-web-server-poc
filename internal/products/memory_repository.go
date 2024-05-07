@@ -35,6 +35,21 @@ func (m *MemoryRespository) Store(name string, color string, price float64, stoc
 	return p, nil
 }
 
+func (m *MemoryRespository) Update(product Product) (Product, error) {
+	ps[product.ID-1] = Product{
+		product.ID,
+		product.Name,
+		product.Color,
+		product.Price,
+		product.Stock,
+		product.Code,
+		product.IsPublished,
+		product.CreatedAt,
+	}
+
+	return ps[product.ID-1], nil
+}
+
 func (m *MemoryRespository) lastID() (uint64, error) {
 	return lastID, nil
 }

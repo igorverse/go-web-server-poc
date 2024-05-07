@@ -4,6 +4,7 @@ type Service interface {
 	Get(id uint64) (Product, error)
 	GetAll() ([]Product, error)
 	Store(name string, color string, price float64, stock int, code string, isPublished bool) (Product, error)
+	Update(id uint64, name string, color string, price float64, stock int, code string, isPublished bool) (Product, error)
 }
 
 type service struct {
@@ -35,6 +36,41 @@ func (s *service) Store(name string, color string, price float64, stock int, cod
 	}
 
 	return product, nil
+}
+
+func (s *service) Update(id uint64, name string, color string, price float64, stock int, code string, isPublished bool) (Product, error) {
+	currentProduct, err := s.repository.Get(id)
+
+	if err != nil {
+		return Product{}, err
+	}
+
+	if name != "" {
+		currentProduct.Name = name
+	}
+
+	if color != "" {
+		currentProduct.Color = color
+	}
+
+	if price > 0 {
+		currentProduct.Price = price
+	}
+
+	if stock >= 0 {
+		currentProduct.Stock = stock
+	}
+
+	if code != "" {
+		currentProduct.Code = code
+	}
+
+	updatedProduct, err := s.repository.Update(currentProduct)
+	if err != nil {
+		return Product{}, err
+	}
+
+	return updatedProduct, nil
 }
 
 func NewService(r Repository) Service {

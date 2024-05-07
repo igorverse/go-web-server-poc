@@ -16,5 +16,6 @@ func main() {
 	pr.POST("/", productHandler.Store())
 	pr.GET("/", productHandler.GetAll())
 	pr.GET("/:id", productHandler.Get())
+	pr.PUT("/:id", productHandler.Update())
 	server.Run()
 }

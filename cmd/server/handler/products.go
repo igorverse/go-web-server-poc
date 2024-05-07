@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -70,7 +69,6 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 		}
 
 		ps, err := c.service.GetAll()
-		fmt.Println(ps)
 
 		id := ctx.Query("id")
 		name := ctx.Query("name")
@@ -164,8 +162,43 @@ func (c *ProductHandler) Store() gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println(p)
-
 		ctx.JSON(http.StatusCreated, p)
+	}
+}
+
+func (c *ProductHandler) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token != "123456" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+
+		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		var req CreateRequestDTO
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		p, err := c.service.Update(id, req.Name, req.Color, req.Price, req.Stock, req.Code, req.IsPublished)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, p)
 	}
 }
