@@ -1,4 +1,4 @@
-package products
+package product
 
 type Repository interface {
 	Get(id uint64) (Product, error)

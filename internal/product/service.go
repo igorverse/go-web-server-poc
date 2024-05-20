@@ -1,4 +1,4 @@
-package products
+package product
 
 type Service interface {
 	Get(id uint64) (Product, error)
