@@ -29,14 +29,6 @@ func NewProduct(p products.Service) *ProductHandler {
 
 func (c *ProductHandler) Get() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
-
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 
 		if err != nil {
@@ -60,14 +52,6 @@ func (c *ProductHandler) Get() gin.HandlerFunc {
 
 func (c *ProductHandler) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
-
 		ps, err := c.service.GetAll()
 
 		id := ctx.Query("id")
@@ -140,13 +124,6 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 
 func (c *ProductHandler) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
 		var req CreateRequestDTO
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
@@ -168,14 +145,6 @@ func (c *ProductHandler) Store() gin.HandlerFunc {
 
 func (c *ProductHandler) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123456" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
-
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
