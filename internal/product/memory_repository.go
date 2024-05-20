@@ -1,53 +1,44 @@
 package product
 
 import (
-	"time"
+	"github.com/igorverse/go-web-server-poc/internal/domain"
 )
 
-var ps []Product
+var ps []domain.Product
 var lastID uint64
 
 type MemoryRespository struct{}
 
-func (m *MemoryRespository) Get(id uint64) (Product, error) {
+func (m *MemoryRespository) Get(id uint64) (domain.Product, error) {
 	return ps[id-1], nil
 }
 
-func (m *MemoryRespository) GetAll() ([]Product, error) {
+func (m *MemoryRespository) GetAll() ([]domain.Product, error) {
 	return ps, nil
 }
 
-func (m *MemoryRespository) Store(name string, color string, price float64, stock int, code string, isPublished bool) (Product, error) {
+func (m *MemoryRespository) Store(p domain.Product) (domain.Product, error) {
 	lastID++
-	p := Product{
-		ID:          lastID,
-		Name:        name,
-		Color:       color,
-		Price:       price,
-		Stock:       stock,
-		Code:        code,
-		IsPublished: isPublished,
-		CreatedAt:   time.Now().Local().Format("2024-02-04"),
-	}
+	p.ID = int(lastID)
 
 	ps = append(ps, p)
 
 	return p, nil
 }
 
-func (m *MemoryRespository) Update(product Product) (Product, error) {
-	ps[product.ID-1] = Product{
-		product.ID,
-		product.Name,
-		product.Color,
-		product.Price,
-		product.Stock,
-		product.Code,
-		product.IsPublished,
-		product.CreatedAt,
+func (m *MemoryRespository) Update(p domain.Product) (domain.Product, error) {
+	ps[p.ID-1] = domain.Product{
+		ID:          int(p.ID),
+		Name:        p.Name,
+		Color:       p.Color,
+		Price:       p.Price,
+		Stock:       p.Stock,
+		Code:        p.Code,
+		IsPublished: p.IsPublished,
+		CreatedAt:   p.CreatedAt,
 	}
 
-	return ps[product.ID-1], nil
+	return ps[p.ID-1], nil
 }
 
 func (m *MemoryRespository) lastID() (uint64, error) {

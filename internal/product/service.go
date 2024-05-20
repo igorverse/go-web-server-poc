@@ -1,26 +1,33 @@
 package product
 
+import (
+	"time"
+
+	"github.com/igorverse/go-web-server-poc/internal/domain"
+	"github.com/igorverse/go-web-server-poc/internal/dto"
+)
+
 type Service interface {
-	Get(id uint64) (Product, error)
-	GetAll() ([]Product, error)
-	Store(name string, color string, price float64, stock int, code string, isPublished bool) (Product, error)
-	Update(id uint64, name string, color string, price float64, stock int, code string, isPublished bool) (Product, error)
+	Get(id uint64) (domain.Product, error)
+	GetAll() ([]domain.Product, error)
+	Store(p dto.CreateProductDTO) (domain.Product, error)
+	Update(id uint64, p dto.UpdatedProductDTO) (domain.Product, error)
 }
 
 type service struct {
 	repository Repository
 }
 
-func (s *service) Get(id uint64) (Product, error) {
+func (s *service) Get(id uint64) (domain.Product, error) {
 	product, err := s.repository.Get(id)
 	if err != nil {
-		return Product{}, err
+		return domain.Product{}, err
 	}
 
 	return product, nil
 }
 
-func (s *service) GetAll() ([]Product, error) {
+func (s *service) GetAll() ([]domain.Product, error) {
 	products, err := s.repository.GetAll()
 	if err != nil {
 		return nil, err
@@ -29,45 +36,50 @@ func (s *service) GetAll() ([]Product, error) {
 	return products, nil
 }
 
-func (s *service) Store(name string, color string, price float64, stock int, code string, isPublished bool) (Product, error) {
-	product, err := s.repository.Store(name, color, price, stock, code, isPublished)
-	if err != nil {
-		return Product{}, err
+func (s *service) Store(p dto.CreateProductDTO) (domain.Product, error) {
+	product := domain.Product{
+		Name:        p.Name,
+		Color:       p.Color,
+		Price:       p.Price,
+		Stock:       p.Stock,
+		Code:        p.Code,
+		IsPublished: p.IsPublished,
+		CreatedAt:   time.Now().Format("02-01-2006"),
 	}
 
-	return product, nil
+	return s.repository.Store(product)
 }
 
-func (s *service) Update(id uint64, name string, color string, price float64, stock int, code string, isPublished bool) (Product, error) {
+func (s *service) Update(id uint64, p dto.UpdatedProductDTO) (domain.Product, error) {
 	currentProduct, err := s.repository.Get(id)
 
 	if err != nil {
-		return Product{}, err
+		return domain.Product{}, err
 	}
 
-	if name != "" {
-		currentProduct.Name = name
+	if p.Name != "" {
+		currentProduct.Name = p.Name
 	}
 
-	if color != "" {
-		currentProduct.Color = color
+	if p.Color != "" {
+		currentProduct.Color = p.Color
 	}
 
-	if price > 0 {
-		currentProduct.Price = price
+	if p.Price > 0 {
+		currentProduct.Price = p.Price
 	}
 
-	if stock >= 0 {
-		currentProduct.Stock = stock
+	if p.Stock >= 0 {
+		currentProduct.Stock = p.Stock
 	}
 
-	if code != "" {
-		currentProduct.Code = code
+	if p.Code != "" {
+		currentProduct.Code = p.Code
 	}
 
 	updatedProduct, err := s.repository.Update(currentProduct)
 	if err != nil {
-		return Product{}, err
+		return domain.Product{}, err
 	}
 
 	return updatedProduct, nil

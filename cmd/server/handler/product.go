@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/igorverse/go-web-server-poc/internal/domain"
 	"github.com/igorverse/go-web-server-poc/internal/dto"
 	"github.com/igorverse/go-web-server-poc/internal/product"
 )
@@ -55,7 +56,7 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 		isPublished := ctx.Query("isPublished")
 		createdAt := ctx.Query("createdAt")
 
-		var filteredProducts []product.Product
+		var filteredProducts []domain.Product
 
 		// TODO: it must be refactored to an elegant solution
 		for _, p := range ps {
@@ -124,7 +125,7 @@ func (c *ProductHandler) Store() gin.HandlerFunc {
 			return
 		}
 
-		p, err := c.service.Store(productDTO.Name, productDTO.Color, productDTO.Price, productDTO.Stock, productDTO.Code, productDTO.IsPublished)
+		p, err := c.service.Store(productDTO)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -145,15 +146,15 @@ func (c *ProductHandler) Update() gin.HandlerFunc {
 			return
 		}
 
-		var req dto.CreateProductDTO
-		if err := ctx.ShouldBindJSON(&req); err != nil {
+		var updateProductDTO dto.UpdatedProductDTO
+		if err := ctx.ShouldBindJSON(&updateProductDTO); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 				"error": err.Error(),
 			})
 			return
 		}
 
-		p, err := c.service.Update(id, req.Name, req.Color, req.Price, req.Stock, req.Code, req.IsPublished)
+		p, err := c.service.Update(id, updateProductDTO)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
