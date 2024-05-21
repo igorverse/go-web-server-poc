@@ -8,6 +8,7 @@ type Repository interface {
 	Store(p domain.Product) (domain.Product, error)
 	Update(p domain.Product) (domain.Product, error)
 	UpdateNameAndPrice(p domain.Product) (domain.Product, error)
+	Delete(id int) error
 	lastID() (int, error)
 }
 

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -191,5 +192,24 @@ func (c *ProductHandler) UpdateNameAndPrice() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, p)
+	}
+}
+
+func (c *ProductHandler) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		err = c.service.Delete(int(id))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": product.ErrNotFound.Error()})
+		}
+
+		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("product %d was removed", id)})
 	}
 }

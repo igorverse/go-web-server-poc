@@ -13,6 +13,7 @@ type Service interface {
 	Store(p dto.CreateProductDTO) (domain.Product, error)
 	Update(id int, p dto.UpdatedProductDTO) (domain.Product, error)
 	UpdateNameAndPrice(id int, p dto.UpdatedNameAndPriceDTO) (domain.Product, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -86,6 +87,15 @@ func (s *service) UpdateNameAndPrice(id int, p dto.UpdatedNameAndPriceDTO) (doma
 	}
 
 	return s.repository.UpdateNameAndPrice(currentProduct)
+}
+
+func (s *service) Delete(id int) error {
+	_, err := s.repository.Get(id)
+	if err != nil {
+		return err
+	}
+
+	return s.repository.Delete(id)
 }
 
 func NewService(r Repository) Service {

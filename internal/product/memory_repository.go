@@ -1,8 +1,6 @@
 package product
 
 import (
-	"fmt"
-
 	"github.com/igorverse/go-web-server-poc/internal/domain"
 )
 
@@ -12,12 +10,20 @@ var lastID int
 type MemoryRespository struct{}
 
 func (m *MemoryRespository) Get(id int) (domain.Product, error) {
-	if id > len(ps) {
-		fmt.Println("Bugs")
+	isFound := false
+	var index int
+	for i := range ps {
+		if ps[i].ID == id {
+			index = i
+			isFound = true
+		}
+	}
+
+	if !isFound {
 		return domain.Product{}, ErrNotFound
 	}
 
-	return ps[int(id)-1], nil
+	return ps[index], nil
 }
 
 func (m *MemoryRespository) GetAll() ([]domain.Product, error) {
@@ -53,6 +59,19 @@ func (m *MemoryRespository) UpdateNameAndPrice(p domain.Product) (domain.Product
 	ps[p.ID-1].Price = p.Price
 
 	return ps[p.ID-1], nil
+}
+
+func (m *MemoryRespository) Delete(id int) error {
+	var index int
+	for i := range ps {
+		if ps[i].ID == id {
+			index = i
+		}
+	}
+
+	ps = append(ps[:index], ps[index+1:]...)
+
+	return nil
 }
 
 func (m *MemoryRespository) lastID() (int, error) {

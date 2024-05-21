@@ -18,5 +18,6 @@ func main() {
 	pr.GET("/:id", productHandler.Get())
 	pr.PUT("/:id", productHandler.Update())
 	pr.PATCH("/:id", productHandler.UpdateNameAndPrice())
+	pr.DELETE("/:id", productHandler.Delete())
 	server.Run()
 }
