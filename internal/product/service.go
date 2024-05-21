@@ -8,32 +8,22 @@ import (
 )
 
 type Service interface {
-	Get(id uint64) (domain.Product, error)
+	Get(id int) (domain.Product, error)
 	GetAll() ([]domain.Product, error)
 	Store(p dto.CreateProductDTO) (domain.Product, error)
-	Update(id uint64, p dto.UpdatedProductDTO) (domain.Product, error)
+	Update(id int, p dto.UpdatedProductDTO) (domain.Product, error)
 }
 
 type service struct {
 	repository Repository
 }
 
-func (s *service) Get(id uint64) (domain.Product, error) {
-	product, err := s.repository.Get(id)
-	if err != nil {
-		return domain.Product{}, err
-	}
-
-	return product, nil
+func (s *service) Get(id int) (domain.Product, error) {
+	return s.repository.Get(id)
 }
 
 func (s *service) GetAll() ([]domain.Product, error) {
-	products, err := s.repository.GetAll()
-	if err != nil {
-		return nil, err
-	}
-
-	return products, nil
+	return s.repository.GetAll()
 }
 
 func (s *service) Store(p dto.CreateProductDTO) (domain.Product, error) {
@@ -50,7 +40,7 @@ func (s *service) Store(p dto.CreateProductDTO) (domain.Product, error) {
 	return s.repository.Store(product)
 }
 
-func (s *service) Update(id uint64, p dto.UpdatedProductDTO) (domain.Product, error) {
+func (s *service) Update(id int, p dto.UpdatedProductDTO) (domain.Product, error) {
 	currentProduct, err := s.repository.Get(id)
 
 	if err != nil {
@@ -77,12 +67,7 @@ func (s *service) Update(id uint64, p dto.UpdatedProductDTO) (domain.Product, er
 		currentProduct.Code = p.Code
 	}
 
-	updatedProduct, err := s.repository.Update(currentProduct)
-	if err != nil {
-		return domain.Product{}, err
-	}
-
-	return updatedProduct, nil
+	return s.repository.Update(currentProduct)
 }
 
 func NewService(r Repository) Service {

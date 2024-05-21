@@ -1,16 +1,23 @@
 package product
 
 import (
+	"fmt"
+
 	"github.com/igorverse/go-web-server-poc/internal/domain"
 )
 
 var ps []domain.Product
-var lastID uint64
+var lastID int
 
 type MemoryRespository struct{}
 
-func (m *MemoryRespository) Get(id uint64) (domain.Product, error) {
-	return ps[id-1], nil
+func (m *MemoryRespository) Get(id int) (domain.Product, error) {
+	if id > len(ps) {
+		fmt.Println("Bugs")
+		return domain.Product{}, ErrNotFound
+	}
+
+	return ps[int(id)-1], nil
 }
 
 func (m *MemoryRespository) GetAll() ([]domain.Product, error) {
@@ -41,6 +48,6 @@ func (m *MemoryRespository) Update(p domain.Product) (domain.Product, error) {
 	return ps[p.ID-1], nil
 }
 
-func (m *MemoryRespository) lastID() (uint64, error) {
+func (m *MemoryRespository) lastID() (int, error) {
 	return lastID, nil
 }

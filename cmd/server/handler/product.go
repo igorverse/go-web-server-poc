@@ -31,7 +31,7 @@ func (c *ProductHandler) Get() gin.HandlerFunc {
 			return
 		}
 
-		p, err := c.service.Get(id)
+		p, err := c.service.Get(int(id))
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
@@ -154,10 +154,10 @@ func (c *ProductHandler) Update() gin.HandlerFunc {
 			return
 		}
 
-		p, err := c.service.Update(id, updateProductDTO)
+		p, err := c.service.Update(int(id), updateProductDTO)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
