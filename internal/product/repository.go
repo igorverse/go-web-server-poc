@@ -7,6 +7,7 @@ type Repository interface {
 	GetAll() ([]domain.Product, error)
 	Store(p domain.Product) (domain.Product, error)
 	Update(p domain.Product) (domain.Product, error)
+	UpdateNameAndPrice(p domain.Product) (domain.Product, error)
 	lastID() (int, error)
 }
 

@@ -17,5 +17,6 @@ func main() {
 	pr.GET("/", productHandler.GetAll())
 	pr.GET("/:id", productHandler.Get())
 	pr.PUT("/:id", productHandler.Update())
+	pr.PATCH("/:id", productHandler.UpdateNameAndPrice())
 	server.Run()
 }

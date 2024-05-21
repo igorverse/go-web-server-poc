@@ -12,6 +12,7 @@ type Service interface {
 	GetAll() ([]domain.Product, error)
 	Store(p dto.CreateProductDTO) (domain.Product, error)
 	Update(id int, p dto.UpdatedProductDTO) (domain.Product, error)
+	UpdateNameAndPrice(id int, p dto.UpdatedNameAndPriceDTO) (domain.Product, error)
 }
 
 type service struct {
@@ -68,6 +69,23 @@ func (s *service) Update(id int, p dto.UpdatedProductDTO) (domain.Product, error
 	}
 
 	return s.repository.Update(currentProduct)
+}
+
+func (s *service) UpdateNameAndPrice(id int, p dto.UpdatedNameAndPriceDTO) (domain.Product, error) {
+	currentProduct, err := s.repository.Get(id)
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	if p.Name != "" {
+		currentProduct.Name = p.Name
+	}
+
+	if p.Price > 0 {
+		currentProduct.Price = p.Price
+	}
+
+	return s.repository.UpdateNameAndPrice(currentProduct)
 }
 
 func NewService(r Repository) Service {

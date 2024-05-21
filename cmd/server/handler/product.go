@@ -164,3 +164,32 @@ func (c *ProductHandler) Update() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, p)
 	}
 }
+
+func (c *ProductHandler) UpdateNameAndPrice() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		var updatedNameAndPriceDTO dto.UpdatedNameAndPriceDTO
+		if err := ctx.ShouldBindJSON(&updatedNameAndPriceDTO); err != nil {
+			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		p, err := c.service.UpdateNameAndPrice(int(id), updatedNameAndPriceDTO)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, p)
+	}
+}

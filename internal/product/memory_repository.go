@@ -48,6 +48,13 @@ func (m *MemoryRespository) Update(p domain.Product) (domain.Product, error) {
 	return ps[p.ID-1], nil
 }
 
+func (m *MemoryRespository) UpdateNameAndPrice(p domain.Product) (domain.Product, error) {
+	ps[p.ID-1].Name = p.Name
+	ps[p.ID-1].Price = p.Price
+
+	return ps[p.ID-1], nil
+}
+
 func (m *MemoryRespository) lastID() (int, error) {
 	return lastID, nil
 }

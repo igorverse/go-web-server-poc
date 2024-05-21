@@ -17,3 +17,8 @@ type UpdatedProductDTO struct {
 	Code        string  `json:"Code" binding:"required"`
 	IsPublished bool    `json:"isPublished" binding:"required"`
 }
+
+type UpdatedNameAndPriceDTO struct {
+	Name  string  `json:"name" binding:"omitempty"`
+	Price float64 `json:"Price" binding:"omitempty"`
+}
