@@ -30,7 +30,7 @@ func (fs *FileStorage) Read(data any) error {
 }
 
 func (fs *FileStorage) Write(data any) error {
-	normalizedData, err := json.MarshalIndent(data, "", " ")
+	normalizedData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return err
 	}
