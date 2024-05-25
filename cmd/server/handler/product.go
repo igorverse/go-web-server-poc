@@ -9,6 +9,7 @@ import (
 	"github.com/igorverse/go-web-server-poc/internal/domain"
 	"github.com/igorverse/go-web-server-poc/internal/dto"
 	"github.com/igorverse/go-web-server-poc/internal/product"
+	"github.com/igorverse/go-web-server-poc/pkg/web"
 )
 
 type ProductHandler struct {
@@ -26,21 +27,17 @@ func (c *ProductHandler) Get() gin.HandlerFunc {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		p, err := c.service.Get(int(id))
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, p)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 }
 
@@ -106,18 +103,16 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 		}
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		if len(ps) == 0 {
-			ctx.JSON(http.StatusNoContent, nil)
+			ctx.JSON(http.StatusNoContent, web.NewResponse(http.StatusNoContent, nil, ""))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, filteredProducts)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, filteredProducts, ""))
 	}
 }
 
@@ -125,20 +120,18 @@ func (c *ProductHandler) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var productDTO dto.CreateProductDTO
 		if err := ctx.ShouldBindJSON(&productDTO); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusUnprocessableEntity, web.NewResponse(http.StatusUnprocessableEntity, nil, err.Error()))
 			return
 		}
 
 		p, err := c.service.Store(productDTO)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
-		ctx.JSON(http.StatusCreated, p)
+		ctx.JSON(http.StatusCreated, web.NewResponse(http.StatusCreated, p, ""))
 	}
 }
 
@@ -146,28 +139,24 @@ func (c *ProductHandler) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		var updateProductDTO dto.UpdatedProductDTO
 		if err := ctx.ShouldBindJSON(&updateProductDTO); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusUnprocessableEntity, web.NewResponse(http.StatusUnprocessableEntity, nil, err.Error()))
 			return
 		}
 
 		p, err := c.service.Update(int(id), updateProductDTO)
 
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, p)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 }
 
@@ -175,28 +164,24 @@ func (c *ProductHandler) UpdateNameAndPrice() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		var updatedNameAndPriceDTO dto.UpdatedNameAndPriceDTO
 		if err := ctx.ShouldBindJSON(&updatedNameAndPriceDTO); err != nil {
-			ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		p, err := c.service.UpdateNameAndPrice(int(id), updatedNameAndPriceDTO)
 
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, p)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 }
 
@@ -204,17 +189,16 @@ func (c *ProductHandler) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		err = c.service.Delete(int(id))
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": product.ErrNotFound.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
+			return
 		}
 
-		ctx.JSON(http.StatusNoContent, gin.H{"data": fmt.Sprintf("product %d was removed", id)})
+		ctx.JSON(http.StatusNoContent, web.NewResponse(http.StatusNoContent, fmt.Sprintf("product %d was removed", id), ""))
 	}
 }

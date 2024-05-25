@@ -1,9 +1,9 @@
 [
   {
-    "id": 1,
-    "name": "Sofá",
-    "color": "Marrom",
-    "price": 2399,
+    "id": 2,
+    "name": "Sofá Premium",
+    "color": "Preto",
+    "price": 2199,
     "stock": 4,
     "code": "SF3",
     "isPublished": true,
