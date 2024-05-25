@@ -1,12 +1,20 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/igorverse/go-web-server-poc/cmd/server/handler"
 	"github.com/igorverse/go-web-server-poc/internal/product"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
+
 	repo := product.NewRepository()
 	service := product.NewService(repo)
 	productHandler := handler.NewProduct(service)
