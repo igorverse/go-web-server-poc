@@ -1,6 +1,9 @@
 package product
 
-import "github.com/igorverse/go-web-server-poc/internal/domain"
+import (
+	"github.com/igorverse/go-web-server-poc/internal/domain"
+	"github.com/igorverse/go-web-server-poc/pkg/storage"
+)
 
 type Repository interface {
 	Get(id int) (domain.Product, error)
@@ -9,11 +12,11 @@ type Repository interface {
 	Update(p domain.Product) (domain.Product, error)
 	UpdateNameAndPrice(p domain.Product) (domain.Product, error)
 	Delete(id int) error
-	lastID() (int, error)
+	LastID() (int, error)
 }
 
 type repository struct{}
 
-func NewRepository() Repository {
-	return &MemoryRespository{}
+func NewRepository(db storage.Storage) Repository {
+	return &FileRepository{db}
 }

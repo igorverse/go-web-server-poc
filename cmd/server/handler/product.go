@@ -112,6 +112,11 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 			return
 		}
 
+		if len(ps) == 0 {
+			ctx.JSON(http.StatusNoContent, nil)
+			return
+		}
+
 		ctx.JSON(http.StatusOK, filteredProducts)
 	}
 }

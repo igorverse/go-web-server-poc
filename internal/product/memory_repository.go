@@ -74,6 +74,6 @@ func (m *MemoryRespository) Delete(id int) error {
 	return nil
 }
 
-func (m *MemoryRespository) lastID() (int, error) {
+func (m *MemoryRespository) LastID() (int, error) {
 	return lastID, nil
 }

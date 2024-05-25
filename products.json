@@ -1,22 +1,12 @@
 [
   {
     "id": 1,
-    "name": "Geladeira",
-    "color": "Cinza",
-    "price": 2799.98,
-    "stock": 42,
-    "code": "AB1",
-    "isPublished": true,
-    "createdAt": "2024-04-24"
-  },
-  {
-    "id": 2,
     "name": "Sofá",
-    "color": "Linho",
-    "price": 2199.00,
-    "stock": 2,
+    "color": "Marrom",
+    "price": 2399,
+    "stock": 4,
     "code": "SF3",
     "isPublished": true,
-    "createdAt": "2024-04-24"
+    "createdAt": "25-05-2024"
   }
 ]
