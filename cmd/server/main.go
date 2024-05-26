@@ -2,12 +2,16 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/igorverse/go-web-server-poc/cmd/server/handler"
+	"github.com/igorverse/go-web-server-poc/docs"
 	"github.com/igorverse/go-web-server-poc/internal/product"
 	"github.com/igorverse/go-web-server-poc/pkg/storage"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -22,6 +26,9 @@ func main() {
 	productHandler := handler.NewProduct(service)
 
 	server := gin.Default()
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	pr := server.Group("/products")
 	pr.POST("/", productHandler.Store())
 	pr.GET("/", productHandler.GetAll())

@@ -1,0 +1,276 @@
+definitions:
+  domain.Product:
+    properties:
+      code:
+        type: string
+      color:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      isPublished:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+  dto.CreateProductDTO:
+    properties:
+      Code:
+        type: string
+      Price:
+        type: number
+      Stock:
+        type: integer
+      color:
+        type: string
+      isPublished:
+        type: boolean
+      name:
+        type: string
+    required:
+    - Code
+    - Price
+    - Stock
+    - color
+    - isPublished
+    - name
+    type: object
+  dto.UpdatedNameAndPriceDTO:
+    properties:
+      Price:
+        type: number
+      name:
+        type: string
+    type: object
+  dto.UpdatedProductDTO:
+    properties:
+      Code:
+        type: string
+      Price:
+        type: number
+      Stock:
+        type: integer
+      color:
+        type: string
+      isPublished:
+        type: boolean
+      name:
+        type: string
+    required:
+    - Code
+    - Price
+    - Stock
+    - color
+    - isPublished
+    - name
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /products:
+    get:
+      description: get products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.Product'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: store products
+      parameters:
+      - description: Product to store
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateProductDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store products
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      description: delete product
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      description: get product
+      parameters:
+      - description: product id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List product
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: update products name and price
+      parameters:
+      - description: Product to update name and price
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatedNameAndPriceDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update products name and price
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: update products
+      parameters:
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatedProductDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/web.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.Product'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update products
+      tags:
+      - Products
+swagger: "2.0"

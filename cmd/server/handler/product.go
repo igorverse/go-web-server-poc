@@ -22,12 +22,22 @@ func NewProduct(p product.Service) *ProductHandler {
 	}
 }
 
+// ListProduct godoc
+// @Summary List product
+// @Tags Products
+// @Description get product
+// @Produce  json
+// @Param id path int true "product id"
+// @Success 200 {object} web.Response{data=domain.Product} "OK"
+// @Failure 400 {object} web.Response "Bad Request"
+// @Failure 404 {object} web.Response "Not Found"
+// @Router /products/{id} [get]
 func (c *ProductHandler) Get() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "invalid product id"))
 			return
 		}
 
@@ -41,6 +51,15 @@ func (c *ProductHandler) Get() gin.HandlerFunc {
 	}
 }
 
+// ListProducts godoc
+// @Summary List products
+// @Tags Products
+// @Description get products
+// @Produce  json
+// @Success 200 {object} web.Response{data=[]domain.Product} "OK"
+// @Failure 400 {object} web.Response "Bad Request"
+// @Failure 404 {object} web.Response "Not Found"
+// @Router /products [get]
 func (c *ProductHandler) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ps, err := c.service.GetAll()
@@ -116,6 +135,17 @@ func (c *ProductHandler) GetAll() gin.HandlerFunc {
 	}
 }
 
+// StoreProducts godoc
+// @Summary Store products
+// @Tags Products
+// @Description store products
+// @Accept  json
+// @Produce  json
+// @Param product body dto.CreateProductDTO true "Product to store"
+// @Success 201 {object} web.Response{data=domain.Product} "Created"
+// @Failure 400 {object} web.Response "Bad Request"
+// @Failure 422 {object} web.Response "Unprocessable Entity"
+// @Router /products [post]
 func (c *ProductHandler) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var productDTO dto.CreateProductDTO
@@ -135,6 +165,17 @@ func (c *ProductHandler) Store() gin.HandlerFunc {
 	}
 }
 
+// UpdateProducts godoc
+// @Summary Update products
+// @Tags Products
+// @Description update products
+// @Accept  json
+// @Produce  json
+// @Param product body dto.UpdatedProductDTO true "Product to update"
+// @Success 200 {object} web.Response{data=domain.Product} "OK"
+// @Failure 400 {object} web.Response "Bad Request"
+// @Failure 422 {object} web.Response "Unprocessable Entity"
+// @Router /products/{id} [put]
 func (c *ProductHandler) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
@@ -160,6 +201,17 @@ func (c *ProductHandler) Update() gin.HandlerFunc {
 	}
 }
 
+// UpdateNameAndPrice godoc
+// @Summary Update products name and price
+// @Tags Products
+// @Description update products name and price
+// @Accept  json
+// @Produce  json
+// @Param product body dto.UpdatedNameAndPriceDTO true "Product to update name and price"
+// @Success 200 {object} web.Response{data=domain.Product} "OK"
+// @Failure 400 {object} web.Response "Bad Request"
+// @Failure 422 {object} web.Response "Unprocessable Entity"
+// @Router /products/{id} [patch]
 func (c *ProductHandler) UpdateNameAndPrice() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
@@ -185,6 +237,16 @@ func (c *ProductHandler) UpdateNameAndPrice() gin.HandlerFunc {
 	}
 }
 
+// DeleteProduct godoc
+// @Summary Delete product
+// @Tags Products
+// @Description delete product
+// @Produce  json
+// @Param id path int true "product id"
+// @Success 204 {object} web.Response{data=domain.Product} "No Content"
+// @Failure 400 {object} web.Response "Bad Request"
+// @Failure 404 {object} web.Response "Not Found"
+// @Router /products/{id} [delete]
 func (c *ProductHandler) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
