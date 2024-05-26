@@ -38,8 +38,12 @@ func (r *FileRepository) Store(p domain.Product) (domain.Product, error) {
 	var ps []domain.Product
 	r.db.Read(&ps)
 
-	lastInsertedID := len(ps)
-	lastInsertedID++
+	lastInsertedID := 1
+
+	if len(ps) > 0 {
+		lastInsertedID = ps[len(ps)-1].ID + 1
+	}
+
 	p.ID = lastInsertedID
 	ps = append(ps, p)
 
